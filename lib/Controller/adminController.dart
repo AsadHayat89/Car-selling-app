@@ -8,6 +8,7 @@ class AdminController extends GetxController{
   RxInt notifyValue=0.obs;
   RxBool Adminnotify=false.obs;
   RxInt AdminnotifyValue=0.obs;
+  RxInt InitailActive=0.obs;
   Future<void> openCamera() async {
     PickedFile? _image = await ImagePicker.platform.pickImage(source: ImageSource.camera);
     imageList.value.add(_image!);

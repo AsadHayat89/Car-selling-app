@@ -24,8 +24,8 @@ class _UserNavState extends State<UserNav> {
   var Controllervale=Get.put(AdminController());
   final screens = [
     Home_page(),
-    const CarForm(),
-    const MyFavourite(),
+    CarForm(),
+    MyFavourite(),
     UserNotifications(),
   ];
 
@@ -34,8 +34,9 @@ class _UserNavState extends State<UserNav> {
     return SafeArea(
       child: Obx(
           ()=> Scaffold(
-            body: screens[index],
+            body: screens[Controllervale.InitailActive.value],
             bottomNavigationBar: ConvexAppBar(
+              initialActiveIndex: Controllervale.InitailActive.value,
               style: TabStyle.react,
               backgroundColor: myColor,
               items:  [
@@ -76,6 +77,7 @@ class _UserNavState extends State<UserNav> {
               onTap: (index) {
                 setState(() {
                   this.index = index;
+                  Controllervale.InitailActive.value=index;
                   //myColor!=Colors.white?addColor=Colors.white:
                 });
               },

@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
-
+import 'package:path/path.dart' as Path;
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
@@ -17,9 +18,13 @@ class Admin extends StatefulWidget {
 
 class _AdminState extends State<Admin> {
   var formKey = GlobalKey<FormState>();
-
+  final picker = ImagePicker();
   List<PickedFile> ImagesUrl = [];
   List<String> UrlPaths=[];
+  List<File> _images = [];
+  double val = 0;
+
+
   //late String carName,price,carModel;
   TextEditingController carName = TextEditingController();
   TextEditingController carModel = TextEditingController();
@@ -161,7 +166,7 @@ class _AdminState extends State<Admin> {
                           primary: myColor),
                       child: Text('Add car'),
                       onPressed: () {
-                        upload();
+                        uploadFile();
 
                         //_image=null;
 
@@ -190,17 +195,69 @@ class _AdminState extends State<Admin> {
   final FirebaseStorage _storage = FirebaseStorage.instance;
 
   Future<void> openCamera() async {
-    _image = await ImagePicker.platform.pickImage(source: ImageSource.camera);
+    final pickedFile = await picker.getImage(source: ImageSource.camera);
+    File selected = File(pickedFile!.path);
+
     setState(() {
-      ImagesUrl.add(_image);
+      _images.add(selected);
+      ImagesUrl.add(pickedFile);
       print(ImagesUrl.length.toString());
     });
   }
 
+  Future uploadFile() async {
+    int i = 1;
+
+    for (var img in _images) {
+
+      try{
+        showAlertDialog(context);
+
+        Reference ref = FirebaseStorage.instance
+            .ref()
+            .child('images/${Path.basename(img.path)}');
+        await ref.putFile(img).whenComplete(() async {
+          await ref.getDownloadURL().then((value) {
+            UrlPaths.add(value);
+            i++;
+          });
+        });
+        Navigator.pop(context);
+      }
+     on Exception{
+
+     }
+      setState(() {
+        print("recehd");
+        DatabaseReference refi = FirebaseDatabase.instance.ref("user");
+        refi.push().set({
+          'mil': carMileage.text,
+          'carName': carName.text,
+          'model': carModel.text,
+          'RegisteredIn': register.text,
+          'price': price.text,
+          'imgUrl': UrlPaths,
+          "body_color": bodyColor.text,
+          "description": des.text,
+        });
+
+        carModel.clear();
+        price.clear();
+        carName.clear();
+        carMileage.clear();
+        bodyColor.clear();
+        des.clear();
+        register.clear();
+        _image = null;
+      });
+
+
+    }
+  }
   Future<void> upload() async {
     if (formKey.currentState!.validate()) {
-      var storageref = _storage.ref("TesFolder/${getImageName(_image)}");
-      var a = File(_image!.path);
+      //var storageref = _storage.ref("TesFolder/${getImageName(_image)}");
+      //var a = File(_image!.path);
       // UploadTask task = storageref.putFile(a);
 
       try {
@@ -226,6 +283,7 @@ class _AdminState extends State<Admin> {
       }
 
       setState(() {
+        print("recehd");
         DatabaseReference refi = FirebaseDatabase.instance.ref("user");
         refi.push().set({
           'mil': carMileage.text,

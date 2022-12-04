@@ -26,10 +26,10 @@ class _login_screenState extends State<login_screen> {
   //static const routeName = '/login-screen';
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   String errorTex = "";
-  bool passenable=false;
-  bool showcricle=false;
+  bool passenable = false;
+  bool showcricle = false;
   final emailController = TextEditingController();
-  String  Passerror = "";
+  String Passerror = "";
   int emailerror = 0;
   final passwordController = TextEditingController();
 
@@ -150,7 +150,6 @@ class _login_screenState extends State<login_screen> {
                     this.errorTex = "";
                   });
                 },
-
                 controller: userInput,
                 autocorrect: false,
                 enableSuggestions: false,
@@ -168,15 +167,16 @@ class _login_screenState extends State<login_screen> {
           ),
         ),
       );
+
   Widget PassordInput(TextEditingController userInput, String hintTitle,
-      TextInputType keyboardType) =>
+          TextInputType keyboardType) =>
       Card(
         elevation: 10,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
         child: Neumorphic(
           style: NeumorphicStyle(
               boxShape:
-              NeumorphicBoxShape.roundRect(BorderRadius.circular(50))),
+                  NeumorphicBoxShape.roundRect(BorderRadius.circular(50))),
           child: Container(
             height: 6.h,
             width: 90.w,
@@ -195,24 +195,31 @@ class _login_screenState extends State<login_screen> {
                   });
                 },
                 obscureText: passenable,
-
                 controller: userInput,
                 autocorrect: false,
                 enableSuggestions: false,
                 autofocus: false,
                 decoration: InputDecoration(
                   hintText: hintTitle,
-                  suffix: IconButton(onPressed: (){ //add Icon button at end of TextField
-                    setState(() { //refresh UI
-                      if(passenable){ //if passenable == true, make it false
-                        print("data1");
-                        passenable = false;
-                      }else{
-                        print("data2");
-                        passenable = true; //if passenable == false, make it true
-                      }
-                    });
-                  }, icon: Icon(passenable == true?Icons.remove_red_eye:Icons.password)),
+                  suffix: IconButton(
+                      onPressed: () {
+                        //add Icon button at end of TextField
+                        setState(() {
+                          //refresh UI
+                          if (passenable) {
+                            //if passenable == true, make it false
+                            print("data1");
+                            passenable = false;
+                          } else {
+                            print("data2");
+                            passenable =
+                                true; //if passenable == false, make it true
+                          }
+                        });
+                      },
+                      icon: Icon(passenable == true
+                          ? Icons.remove_red_eye
+                          : Icons.password)),
                   hintStyle: TextStyle(
                       fontSize: 18,
                       color: Colors.black.withOpacity(0.5),
@@ -224,6 +231,7 @@ class _login_screenState extends State<login_screen> {
           ),
         ),
       );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -239,220 +247,233 @@ class _login_screenState extends State<login_screen> {
               ),
             ),
           ),
-          child: showcricle?Center(child: CircularProgressIndicator()):Center(
-            child: SingleChildScrollView(
-              reverse: true,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 10.h),
-                  Center(
-                    child: userInput(
-                        emailController, 'Email', TextInputType.emailAddress),
-                  ),
-                  if(this.errorTex!="")
-                  Padding(
-                    padding:  EdgeInsets.only(left: 40),
-                    child: Text(this.errorTex.toString(),style: TextStyle(color: Colors.red,fontSize: 14),),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Center(
-                    child: userInput(passwordController, 'Password',
-                        TextInputType.visiblePassword),
-                  ),
-                  if(this.Passerror!="")
-                  Padding(
-                    padding:  EdgeInsets.only(left: 40),
-                    child: Text(this.Passerror.toString(),style: TextStyle(color: Colors.red,fontSize: 14),),
-                  ),
-                  // Text(
-                  //   "data1",
-                  //   textAlign: TextAlign.start,
-                  // ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Center(
-                    child: Text(
-                      'Forgot password ?',
-                      style: TextStyle(
-                          color: myColor,
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  SizedBox(height: 15),
-                  // Center(
-                  //   child: Text(
-                  //     this.errorTex,
-                  //     style: TextStyle(
-                  //         color: Colors.red,
-                  //         fontSize: 18,
-                  //         fontWeight: FontWeight.bold),
-                  //   ),
-                  // ),
-                  SizedBox(height: 30),
-                  Center(
-                    child: Container(
-                      //height: 55,
+          child: showcricle
+              ? Center(child: CircularProgressIndicator())
+              : Center(
+                  child: SingleChildScrollView(
+                    reverse: true,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 10.h),
+                        Center(
+                          child: userInput(emailController, 'Email',
+                              TextInputType.emailAddress),
+                        ),
+                        if (this.errorTex != "")
+                          Padding(
+                            padding: EdgeInsets.only(left: 40),
+                            child: Text(
+                              this.errorTex.toString(),
+                              style: TextStyle(color: Colors.red, fontSize: 14),
+                            ),
+                          ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Center(
+                          child: userInput(passwordController, 'Password',
+                              TextInputType.visiblePassword),
+                        ),
+                        if (this.Passerror != "")
+                          Padding(
+                            padding: EdgeInsets.only(left: 40),
+                            child: Text(
+                              this.Passerror.toString(),
+                              style: TextStyle(color: Colors.red, fontSize: 14),
+                            ),
+                          ),
+                        // Text(
+                        //   "data1",
+                        //   textAlign: TextAlign.start,
+                        // ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Center(
+                          child: Text(
+                            'Forgot password ?',
+                            style: TextStyle(
+                                color: myColor,
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        SizedBox(height: 15),
+                        // Center(
+                        //   child: Text(
+                        //     this.errorTex,
+                        //     style: TextStyle(
+                        //         color: Colors.red,
+                        //         fontSize: 18,
+                        //         fontWeight: FontWeight.bold),
+                        //   ),
+                        // ),
+                        SizedBox(height: 30),
+                        Center(
+                          child: Container(
+                            //height: 55,
 
-                      padding: const EdgeInsets.only(top: 5, left: 70, right: 70),
-                      // ignore: deprecated_member_use
-                      child: ElevatedButton(
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(myColor),
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(25),
+                            padding: const EdgeInsets.only(
+                                top: 5, left: 70, right: 70),
+                            // ignore: deprecated_member_use
+                            child: ElevatedButton(
+                              style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.all(myColor),
+                                shape: MaterialStateProperty.all<
+                                    RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(25),
+                                  ),
+                                ),
+                              ),
+                              onPressed: () async {
+                                var res = EmailValidator.validate(
+                                    emailController.text);
+                                //print("result  "+ res.toString());
+                                if (res == true) {
+                                  if (passwordController.text.length >= 7) {
+                                    print("here1");
+                                    checkConnectivity(context);
+                                    setState(() {
+                                      this.showcricle = true;
+                                    });
+
+                                    await AuthServices.signInWithEmailandPass(
+                                        emailController.text,
+                                        passwordController.text,
+                                        context);
+                                    setState(() {
+                                      this.showcricle = false;
+                                      this.errorTex = "Email is invalid";
+                                      this.Passerror = "Incorrect Password";
+                                    });
+                                    bool? n = AuthServices.exist;
+
+                                    if (n != null) Get.to(Admin());
+                                  } else {
+                                    setState(() {
+                                      this.Passerror =
+                                          "Password should be greater then 7";
+                                    });
+                                  }
+                                } else {
+                                  setState(() {
+                                    this.errorTex = "Email is invalid";
+                                    //this.Passerror = "Incorrect Password";
+                                  });
+                                }
+                                //
+                              },
+                              child: Text(
+                                'Login',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.white,
+                                ),
+                              ),
                             ),
                           ),
                         ),
-                        onPressed: () async {
-                          var res = EmailValidator.validate(emailController.text);
-                          //print("result  "+ res.toString());
-                          if (res == true) {
-                            if(passwordController.text.length>=7){
-                              print("here1");
-                              checkConnectivity(context);
-                              setState(() {
-                                this.showcricle=true;
-                              });
-
-                              await AuthServices.signInWithEmailandPass(
-                                  emailController.text, passwordController.text,context);
-                              setState(() {
-                                this.showcricle=false;
-                                this.errorTex = "Email is invalid";
-                                this.Passerror = "Incorrect Password";
-
-                              });
-                              bool? n = AuthServices.exist;
-
-                              if (n != null) Get.to(Admin());
-                            }
-                            else{
-                              setState(() {
-                                this.Passerror="Password should be greater then 7";
-                              });
-                            }
-                          } else {
-                            setState(() {
-                              this.errorTex = "Email is invalid";
-                              //this.Passerror = "Incorrect Password";
-
-                            });
-                          }
-                          //
-                        },
-                        child: Text(
-                          'Login',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.white,
+                        SizedBox(height: 10),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 10.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Container(
+                                decoration: const BoxDecoration(
+                                  gradient: LinearGradient(
+                                      colors: <Color>[
+                                        Colors.white10,
+                                        Colors.white,
+                                      ],
+                                      begin: FractionalOffset(0.0, 0.0),
+                                      end: FractionalOffset(1.0, 1.0),
+                                      stops: <double>[0.0, 1.0],
+                                      tileMode: TileMode.clamp),
+                                ),
+                                width: 100.0,
+                                height: 1.0,
+                              ),
+                              const Padding(
+                                padding:
+                                    EdgeInsets.only(left: 15.0, right: 15.0),
+                                child: Text(
+                                  'Or',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16.0,
+                                      fontFamily: 'WorkSansMedium'),
+                                ),
+                              ),
+                              Container(
+                                decoration: const BoxDecoration(
+                                  gradient: LinearGradient(
+                                      colors: <Color>[
+                                        Colors.white,
+                                        Colors.white10,
+                                      ],
+                                      begin: FractionalOffset(0.0, 0.0),
+                                      end: FractionalOffset(1.0, 1.0),
+                                      stops: <double>[0.0, 1.0],
+                                      tileMode: TileMode.clamp),
+                                ),
+                                width: 100.0,
+                                height: 1.0,
+                              ),
+                            ],
                           ),
                         ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Container(
-                          decoration: const BoxDecoration(
-                            gradient: LinearGradient(
-                                colors: <Color>[
-                                  Colors.white10,
-                                  Colors.white,
+                        SizedBox(height: 5),
+                        Center(
+                          child: IconButton(
+                            onPressed: () {},
+                            icon: InkWell(
+                                onTap: () {
+                                  googleSignup(context);
+                                },
+                                child: Image.asset(
+                                  "assets/google.png",
+                                  height: 50,
+                                )),
+                          ),
+                        ),
+                        SizedBox(height: 5),
+                        Center(
+                          child: Container(
+                            child: RichText(
+                              text: TextSpan(
+                                text: "Dont't have account?",
+                                style: TextStyle(
+                                    color: myColor,
+                                    fontWeight: FontWeight.bold),
+                                children: [
+                                  TextSpan(
+                                    text: " Signup",
+                                    style: TextStyle(
+                                      color: Color.fromARGB(255, 23, 116, 210),
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () {
+                                        print("fg");
+                                        Get.to(signup());
+                                      },
+                                  )
                                 ],
-                                begin: FractionalOffset(0.0, 0.0),
-                                end: FractionalOffset(1.0, 1.0),
-                                stops: <double>[0.0, 1.0],
-                                tileMode: TileMode.clamp),
+                              ),
+                            ),
                           ),
-                          width: 100.0,
-                          height: 1.0,
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.only(left: 15.0, right: 15.0),
-                          child: Text(
-                            'Or',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16.0,
-                                fontFamily: 'WorkSansMedium'),
-                          ),
-                        ),
-                        Container(
-                          decoration: const BoxDecoration(
-                            gradient: LinearGradient(
-                                colors: <Color>[
-                                  Colors.white,
-                                  Colors.white10,
-                                ],
-                                begin: FractionalOffset(0.0, 0.0),
-                                end: FractionalOffset(1.0, 1.0),
-                                stops: <double>[0.0, 1.0],
-                                tileMode: TileMode.clamp),
-                          ),
-                          width: 100.0,
-                          height: 1.0,
-                        ),
+                        )
                       ],
                     ),
                   ),
-                  SizedBox(height: 5),
-                  Center(
-                    child: IconButton(
-                      onPressed: () {},
-                      icon: InkWell(
-                          onTap: () {
-                            googleSignup(context);
-                          },
-                          child: Image.asset(
-                            "assets/google.png",
-                            height: 50,
-                          )),
-                    ),
-                  ),
-                  SizedBox(height: 5),
-                  Center(
-                    child: Container(
-                      child: RichText(
-                        text: TextSpan(
-                          text: "Dont't have account?",
-                          style: TextStyle(
-                              color: myColor, fontWeight: FontWeight.bold),
-                          children: [
-                            TextSpan(
-                              text: " Signup",
-                              style: TextStyle(
-                                color: Color.fromARGB(255, 23, 116, 210),
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              recognizer: TapGestureRecognizer()
-                                ..onTap = () {
-                                  print("fg");
-                                  Get.to(signup());
-                                },
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ),
+                ),
         ),
       ),
     );

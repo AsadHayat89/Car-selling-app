@@ -393,7 +393,7 @@ class _QueryDetailState extends State<QueryDetail> {
                           FilteringTextInputFormatter.digitsOnly
                         ],
                         decoration: InputDecoration(
-                          errorText: errorText,
+                            errorText: this.errorfound?errorText:null,
                           border: OutlineInputBorder(),
                           labelText: 'Price',
                           hintText: 'Enter Price',
@@ -419,8 +419,11 @@ class _QueryDetailState extends State<QueryDetail> {
                               });
 
                             }
-                            Future<bool> res=updatedata();
-                          Navigator.pop(context);
+                            else{
+                              Future<bool> res=updatedata();
+                              Navigator.pop(context);
+                            }
+
                           },
                           child: Container(
                             width: 100,
@@ -437,17 +440,22 @@ class _QueryDetailState extends State<QueryDetail> {
                           ),
                         ),
                       ),
-                  Container(
-                    width: 100,
-                    height: 40,
+                  GestureDetector(
+                    onTap: (){
+                      Navigator.pop(context);
+                    },
+                    child: Container(
+                      width: 100,
+                      height: 40,
 
-                    decoration: BoxDecoration(
-                        border: Border.all(
-                          color: myColor,
-                        ),
-                        borderRadius: BorderRadius.all(Radius.circular(10))
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                            color: myColor,
+                          ),
+                          borderRadius: BorderRadius.all(Radius.circular(10))
+                      ),
+                      child: Center(child: Text("Back",style: TextStyle(fontSize: 18),)),
                     ),
-                    child: Center(child: Text("Back",style: TextStyle(fontSize: 18),)),
                   ),
 
                     ],

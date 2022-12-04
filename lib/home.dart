@@ -19,12 +19,14 @@ import 'package:mjcars/mycolors.dart';
 import 'package:mjcars/paymentList.dart';
 import 'package:mjcars/pdfView.dart';
 import 'package:mjcars/searchbar/searchbar.dart';
+import 'package:mjcars/userNotification.dart';
 import 'package:sizer/sizer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import 'Controller/adminController.dart';
 import 'constants/Constants.dart';
 import 'data.dart';
+import 'firebase/userNav.dart';
 import 'login.dart';
 // ignore_for_file: prefer_const_constructors
 
@@ -35,67 +37,56 @@ class Home_page extends StatefulWidget {
 
 class _Home_pageState extends State<Home_page> {
   //late StreamSubscription _dailySpecialStream;
-  var Controllervale=Get.put(AdminController());
+  var Controllervale = Get.put(AdminController());
   FirebaseFirestore firestore = FirebaseFirestore.instance;
-  int unseendata=0;
-  int adminSeen=0;
+  int unseendata = 0;
+  int adminSeen = 0;
   var clr = Colors.grey;
-  final GlobalKey<ScaffoldState> _scaffoldKey =
-  new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  void getDetails() async{
-
-
-    await firestore.collection("query")
-        .get()
-        .then((QuerySnapshot snapshot) {
+  void getDetails() async {
+    await firestore.collection("query").get().then((QuerySnapshot snapshot) {
       snapshot.docs.forEach((f) {
         //Needs obj= new Need();
-        print("seen data:"+f['Userseen']);
-        if(f['Userseen']=="0") {
+        print("seen data:" + f['Userseen']);
+        if (f['Userseen'] == "0") {
           setState(() {
             unseendata = unseendata + 1;
             //myColor!=Colors.white?addColor=Colors.white:
           });
         }
-        print("seen data:"+f['adminSeen']);
-        if(f['adminSeen']=="0"){
+        print("seen data:" + f['adminSeen']);
+        if (f['adminSeen'] == "0") {
           setState(() {
             print("aya ho");
-            adminSeen=adminSeen+1;
+            adminSeen = adminSeen + 1;
             //myColor!=Colors.white?addColor=Colors.white:
           });
-
         }
-        });
-      }
-      );
+      });
+    });
 
-
-    print("Unseen data:"+ unseendata.toString());
-        if(unseendata>0){
-          setState(() {
-            Constants.notfiy=false;
-            Controllervale.notify.value=true;
-            Controllervale.notifyValue.value=unseendata;
-            print("came here");
-          });
-        }
-          print("admin data data:"+ adminSeen.toString());
-          if(adminSeen>0){
-            setState(() {
-              Constants.notfiy=false;
-              Controllervale.Adminnotify.value=true;
-              Controllervale.AdminnotifyValue.value=adminSeen;
-              print("came here");
-            });
-          }
-        //firestore.collection("query").doc(f.id).update({"seen":"1"});
-
-
-
-
+    print("Unseen data:" + unseendata.toString());
+    if (unseendata > 0) {
+      setState(() {
+        Constants.notfiy = false;
+        Controllervale.notify.value = true;
+        Controllervale.notifyValue.value = unseendata;
+        print("came here");
+      });
+    }
+    print("admin data data:" + adminSeen.toString());
+    if (adminSeen > 0) {
+      setState(() {
+        Constants.notfiy = false;
+        Controllervale.Adminnotify.value = true;
+        Controllervale.AdminnotifyValue.value = adminSeen;
+        print("came here");
+      });
+    }
+    //firestore.collection("query").doc(f.id).update({"seen":"1"});
   }
+
   //var item;
   bool isloading = true;
   final List<String> _listItem = [
@@ -114,26 +105,27 @@ class _Home_pageState extends State<Home_page> {
   List<Data> dataList = [];
   List<dynamic> d = [];
   List<dynamic> favList = [];
-  String UserName="";
+  String UserName = "";
+
   @override
   void initState() {
     print("object");
     super.initState();
     print(auth1);
-   getDetails();
-    if(unseendata>0){
+    getDetails();
+    if (unseendata > 0) {
       setState(() {
         print("came here");
-        Controllervale.notify.value=false;
-        Controllervale.notifyValue.value=unseendata;
+        Controllervale.notify.value = false;
+        Controllervale.notifyValue.value = unseendata;
       });
     }
-    print("admin data data:"+ adminSeen.toString());
-    if(adminSeen>0){
+    print("admin data data:" + adminSeen.toString());
+    if (adminSeen > 0) {
       setState(() {
-        Constants.notfiy=false;
-        Controllervale.Adminnotify.value=true;
-        Controllervale.AdminnotifyValue.value=unseendata;
+        Constants.notfiy = false;
+        Controllervale.Adminnotify.value = true;
+        Controllervale.AdminnotifyValue.value = unseendata;
         print("came here");
       });
     }
@@ -219,20 +211,18 @@ class _Home_pageState extends State<Home_page> {
 
   @override
   Widget build(BuildContext context) {
-
     return SafeArea(
-      child:Scaffold(
-          key: _scaffoldKey,
-          drawer: DrawerWidget(),
-          body: wholeHome(context),
-        ),
-
+      child: Scaffold(
+        key: _scaffoldKey,
+        drawer: DrawerWidget(),
+        body: wholeHome(context),
+      ),
     );
   }
-  Widget DrawerWidget(){
+
+  Widget DrawerWidget() {
     return Drawer(
       child: Column(
-
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -240,7 +230,7 @@ class _Home_pageState extends State<Home_page> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Padding(
-                padding:EdgeInsets.only(top: 20),
+                padding: EdgeInsets.only(top: 20),
                 child: Container(
                   width: 120,
                   height: 120,
@@ -248,49 +238,87 @@ class _Home_pageState extends State<Home_page> {
                     color: myColor,
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(Icons.person,color: Colors.white,size: 86,),
+                  child: Icon(
+                    Icons.person,
+                    color: Colors.white,
+                    size: 86,
+                  ),
                 ),
               ),
               Padding(
                 padding: EdgeInsets.only(top: 8),
-                child: Text(FirebaseAuth.instance.currentUser!.email.toString(),style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
+                child: Text(
+                  FirebaseAuth.instance.currentUser!.email.toString(),
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
               ),
               Padding(
                 padding: EdgeInsets.only(top: 8),
-                child: Text("View Profile",style: TextStyle(fontSize: 18,color: Colors.blueAccent),),
+                child: Text(
+                  "View Profile",
+                  style: TextStyle(fontSize: 18, color: Colors.blueAccent),
+                ),
               ),
               Padding(
                   padding: EdgeInsets.only(top: 50),
-                  child: Container(
-                    width: 230,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("My Notifications",style: TextStyle(color: myColor,fontSize: 18,fontWeight: FontWeight.bold),),
-
-                        Icon(FontAwesomeIcons.bell,color: myColor,)
-                      ],
+                  child: GestureDetector(
+                    onTap: () {
+                      Controllervale.InitailActive.value = 3;
+                      Navigator.of(context, rootNavigator: false).push(MaterialPageRoute(
+                          builder: (context) => UserNav()));
+                    },
+                    child: Container(
+                      width: 230,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "My Notifications",
+                            style: TextStyle(
+                                color: myColor,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          Icon(
+                            FontAwesomeIcons.bell,
+                            color: myColor,
+                          )
+                        ],
+                      ),
                     ),
-                  )
-              ),
-              Padding(
-                  padding: EdgeInsets.only(top: 20),
-                  child: Container(
-                    width: 230,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("Save Ads",style: TextStyle(color: myColor,fontSize: 18,fontWeight: FontWeight.bold),),
-
-                        Icon(FontAwesomeIcons.download,color: myColor,)
-                      ],
-                    ),
-                  )
+                  )),
+              GestureDetector(
+                onTap: (){
+                  Controllervale.InitailActive.value = 1;
+                  Navigator.of(context, rootNavigator: false).push(MaterialPageRoute(
+                      builder: (context) => UserNav()));
+                },
+                child: Padding(
+                    padding: EdgeInsets.only(top: 20),
+                    child: Container(
+                      width: 230,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Save Ads",
+                            style: TextStyle(
+                                color: myColor,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          Icon(
+                            FontAwesomeIcons.download,
+                            color: myColor,
+                          )
+                        ],
+                      ),
+                    )),
               ),
               Padding(
                   padding: EdgeInsets.only(top: 20),
                   child: GestureDetector(
-                    onTap:(){
+                    onTap: () {
                       print("ehre");
                       Get.to(() => PdfView());
                       //Get.to(PdfView());
@@ -300,70 +328,89 @@ class _Home_pageState extends State<Home_page> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("Certificate",style: TextStyle(color: myColor,fontSize: 18,fontWeight: FontWeight.bold),),
-
-                          Icon(FontAwesomeIcons.certificate,color: myColor,)
+                          Text(
+                            "Certificate",
+                            style: TextStyle(
+                                color: myColor,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          Icon(
+                            FontAwesomeIcons.certificate,
+                            color: myColor,
+                          )
                         ],
                       ),
                     ),
-                  )
-              ),
+                  )),
               Padding(
                   padding: EdgeInsets.only(top: 20),
                   child: GestureDetector(
-                    onTap:(){
+                    onTap: () {
                       Get.to(PaymentDetails());
-    },
+                    },
                     child: Container(
                       width: 230,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("Tax Payment detatils",style: TextStyle(color: myColor,fontSize: 18,fontWeight: FontWeight.bold),),
-
-                          Icon(FontAwesomeIcons.moneyCheckDollar,color: myColor,)
+                          Text(
+                            "Tax Payment detatils",
+                            style: TextStyle(
+                                color: myColor,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          Icon(
+                            FontAwesomeIcons.moneyCheckDollar,
+                            color: myColor,
+                          )
                         ],
                       ),
                     ),
-                  )
-              ),
-
+                  )),
             ],
           ),
           GestureDetector(
-            onTap: () async{
+            onTap: () async {
               await SessionManager().destroy();
               await FirebaseAuth.instance.signOut();
               print("print signout");
               Navigator.pushReplacement(context,
                   MaterialPageRoute(builder: (ctx) {
-                    return login_screen();
-                  }));
+                return login_screen();
+              }));
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Text("Logout",style: TextStyle(color: myColor,fontSize: 20),),
+                Text(
+                  "Logout",
+                  style: TextStyle(color: myColor, fontSize: 20),
+                ),
                 Padding(
-                  padding: EdgeInsets.only(left: 10,right: 10,bottom: 10),
+                  padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
                   child: Container(
                     width: 60,
                     height: 60,
                     decoration: new BoxDecoration(
-                      color: myColor,
-                        borderRadius: BorderRadius.all(Radius.circular(20))
+                        color: myColor,
+                        borderRadius: BorderRadius.all(Radius.circular(20))),
+                    child: Icon(
+                      Icons.logout,
+                      color: Colors.white,
+                      size: 35,
                     ),
-                    child: Icon(Icons.logout,color: Colors.white,size: 35,),
                   ),
                 ),
               ],
             ),
           )
-
         ],
       ),
     );
   }
+
   Container wholeHome(BuildContext context) {
     return Container(
       color: Colors.white,
@@ -381,13 +428,12 @@ class _Home_pageState extends State<Home_page> {
                   Padding(
                     padding: EdgeInsets.only(left: 10, top: 5),
                     child: GestureDetector(
-                      onTap:()=> _scaffoldKey.currentState?.openDrawer(),
+                        onTap: () => _scaffoldKey.currentState?.openDrawer(),
                         child: Icon(
-                      FontAwesomeIcons.bars,
-                      color: myColor,
-                    )),
+                          FontAwesomeIcons.bars,
+                          color: myColor,
+                        )),
                   ),
-
                 ],
               ),
               search(context, searchMethod),
@@ -401,7 +447,10 @@ class _Home_pageState extends State<Home_page> {
                 mainAxisSpacing: 20,
                 shrinkWrap: true,
                 children:
-                    List.generate(dataList.length, (index) => GridDesign(index))
+                    List.generate(dataList.length, (index) => Padding(
+                      padding: EdgeInsets.only(bottom: 20),
+                      child: GridDesign(index),
+                    ))
                         .toList(),
               )),
             ],
@@ -447,9 +496,10 @@ class _Home_pageState extends State<Home_page> {
   }
 
   SizedBox GridDesign(int index) {
-    print("index value is: "+index.toString());
+    print("index value is: " + index.toString());
 
     return SizedBox(
+      //print(dataList[index].url.length);
       child: Column(
         children: [
           Stack(
@@ -463,7 +513,9 @@ class _Home_pageState extends State<Home_page> {
                     // border: Border.all(color: Colors.grey,style: BorderStyle.solid,width: 2),
                     borderRadius: BorderRadius.circular(5),
                     image: DecorationImage(
-                        image: NetworkImage(dataList[index].url[0].toString()),
+                        image: NetworkImage(dataList[index]
+                            .url[dataList[index].url.length - 1]
+                            .toString()),
                         fit: BoxFit.cover)),
               ),
               Positioned(
@@ -554,7 +606,7 @@ class _Home_pageState extends State<Home_page> {
             onPressed: () {
               print("asad");
               //print(dataList[index].Url[0]);
-              Get.to(DetailPage(dataList[index].Url[1], dataList[index].Price));
+              Get.to(DetailPage(dataList[index].Url[dataList[index].url.length-1], dataList[index].Price));
             },
             style: ElevatedButton.styleFrom(primary: myColor),
             child: Text("Details"),
@@ -623,7 +675,7 @@ class _Home_pageState extends State<Home_page> {
           Value[k]["imgUrl"],
           k,
         );
-        if (data.carName!.contains(text)) {
+        if (data.carName!.toLowerCase().contains(text.toLowerCase())) {
           dataList.add(data);
         }
       }
