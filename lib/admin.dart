@@ -6,6 +6,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mjcars/dialog.dart';
+import 'Admin_Nav.dart';
 import 'Textfielddesign.dart';
 
 import 'package:flutter/material.dart';
@@ -20,10 +21,9 @@ class _AdminState extends State<Admin> {
   var formKey = GlobalKey<FormState>();
   final picker = ImagePicker();
   List<PickedFile> ImagesUrl = [];
-  List<String> UrlPaths=[];
+  List<String> UrlPaths = [];
   List<File> _images = [];
   double val = 0;
-
 
   //late String carName,price,carModel;
   TextEditingController carName = TextEditingController();
@@ -84,22 +84,23 @@ class _AdminState extends State<Admin> {
                                     scrollDirection: Axis.horizontal,
                                     itemCount: ImagesUrl.length,
                                     itemBuilder:
-                                        (BuildContext context, int index) => Card(
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                              image: DecorationImage(
-                                            fit: BoxFit.fill,
-                                            image: FileImage(File(ImagesUrl[index].path)),
-                                          )),
-                                          height: 58,
-                                          width: 110,
-                                        ),
+                                        (BuildContext context, int index) =>
+                                            Card(
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                          fit: BoxFit.fill,
+                                          image: FileImage(
+                                              File(ImagesUrl[index].path)),
+                                        )),
+                                        height: 58,
+                                        width: 110,
                                       ),
-
+                                    ),
                                   ),
                                 ),
                                 GestureDetector(
-                                  onTap: (){
+                                  onTap: () {
                                     openCamera();
                                   },
                                   child: Container(
@@ -108,7 +109,8 @@ class _AdminState extends State<Admin> {
                                     child: Row(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
                                         Icon(
                                           Icons.camera_alt_outlined,
@@ -117,7 +119,11 @@ class _AdminState extends State<Admin> {
                                         ),
                                         Padding(
                                           padding: EdgeInsets.only(left: 5),
-                                          child: Text("Add more Images",style: TextStyle(color: Colors.white),),
+                                          child: Text(
+                                            "Add more Images",
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
                                         )
                                       ],
                                     ),
@@ -208,52 +214,53 @@ class _AdminState extends State<Admin> {
   Future uploadFile() async {
     int i = 1;
 
-    for (var img in _images) {
-
-      try{
+    try {
         showAlertDialog(context);
-
-        Reference ref = FirebaseStorage.instance
-            .ref()
-            .child('images/${Path.basename(img.path)}');
-        await ref.putFile(img).whenComplete(() async {
-          await ref.getDownloadURL().then((value) {
-            UrlPaths.add(value);
-            i++;
+        print("here 1");
+        FirebaseStorage storage = FirebaseStorage.instance;
+        Reference ref = storage.ref().child("TesFolder/${DateTime.now()}");
+        for (int i = 0; i < ImagesUrl.length; i++) {
+          await ref.putFile(File(ImagesUrl[0]!.path));
+          var imageUrl = await ref.getDownloadURL();
+          print("data here: " + imageUrl);
+          //url = imageUrl.toString();
+          setState(() {
+            print("data found here 1");
+            UrlPaths.add(imageUrl);
           });
-        });
-        Navigator.pop(context);
-      }
-     on Exception{
+        }
 
-     }
-      setState(() {
-        print("recehd");
-        DatabaseReference refi = FirebaseDatabase.instance.ref("user");
-        refi.push().set({
-          'mil': carMileage.text,
-          'carName': carName.text,
-          'model': carModel.text,
-          'RegisteredIn': register.text,
-          'price': price.text,
-          'imgUrl': UrlPaths,
-          "body_color": bodyColor.text,
-          "description": des.text,
-        });
+      } on Exception {}
 
-        carModel.clear();
-        price.clear();
-        carName.clear();
-        carMileage.clear();
-        bodyColor.clear();
-        des.clear();
-        register.clear();
-        _image = null;
+    setState(() {
+      print("paths here: "+UrlPaths[0].toString());
+      DatabaseReference refi = FirebaseDatabase.instance.ref("user");
+      refi.push().set({
+        'mil': carMileage.text,
+        'carName': carName.text,
+        'model': carModel.text,
+        'RegisteredIn': register.text,
+        'price': price.text,
+        'imgUrl': UrlPaths,
+        "body_color": bodyColor.text,
+        "description": des.text,
       });
 
+      carModel.clear();
+      price.clear();
+      carName.clear();
+      carMileage.clear();
+      bodyColor.clear();
+      des.clear();
+      register.clear();
+      _image = null;
+    });
 
-    }
+    Navigator.of(context, rootNavigator: false).push(MaterialPageRoute(
+        builder: (context) => NavBar()));
+
   }
+
   Future<void> upload() async {
     if (formKey.currentState!.validate()) {
       //var storageref = _storage.ref("TesFolder/${getImageName(_image)}");
@@ -264,15 +271,14 @@ class _AdminState extends State<Admin> {
         showAlertDialog(context);
         FirebaseStorage storage = FirebaseStorage.instance;
         Reference ref = storage.ref().child("TesFolder/${DateTime.now()}");
-        for(int i=0;i<ImagesUrl.length;i++){
+        for (int i = 0; i < ImagesUrl.length; i++) {
           await ref.putFile(File(ImagesUrl[i]!.path));
           var imageUrl = await ref.getDownloadURL();
-          print("data here: "+imageUrl);
+          print("data here: " + imageUrl);
           //url = imageUrl.toString();
           setState(() {
             UrlPaths.add(imageUrl);
           });
-
         }
 
         //print(imageUrl);

@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -39,8 +40,11 @@ class _Home_pageState extends State<Home_page> {
   //late StreamSubscription _dailySpecialStream;
   var Controllervale = Get.put(AdminController());
   FirebaseFirestore firestore = FirebaseFirestore.instance;
+  FirebaseAuth auth=FirebaseAuth.instance;
   int unseendata = 0;
   int adminSeen = 0;
+  dynamic  userID="";
+  dynamic mail=SessionManager().get("Type");
   var clr = Colors.grey;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
@@ -109,8 +113,12 @@ class _Home_pageState extends State<Home_page> {
 
   @override
   void initState() {
-    print("object");
+    User? a=auth.currentUser;
+    userID=SessionManager().get("Uid").toString();
+    print("object:"+a!.uid.toString());
+    userID=a!.uid;
     super.initState();
+    funcdata();
     print(auth1);
     getDetails();
     if (unseendata > 0) {
@@ -129,7 +137,7 @@ class _Home_pageState extends State<Home_page> {
         print("came here");
       });
     }
-    _activateListener();
+  //  _activateListener();
   }
 
   // void addShow() async{
@@ -140,6 +148,48 @@ class _Home_pageState extends State<Home_page> {
   //       .data['name']
   //       .toString();
   // }
+  void funcdata() async{
+    int i=0;
+    final snapshot = await FirebaseDatabase.instance.ref('user').get();
+
+    final map = snapshot.value as Map<dynamic, dynamic>;
+
+    map.forEach((key, value) {
+      //final user = User.fromMap(value);
+      print("data1");
+      setState(() {
+        Data data = Data(
+          value['carName'],
+          value['price'],
+          value["imgUrl"],
+          key,
+        );
+        i++;
+        print("KEy value: "+key);
+        int j=0;
+        if(value['fav']!=null){
+          Map<String, dynamic?> data = new Map<String, dynamic?>.from(value['fav']);
+          print("daat here: "+data.containsKey(userID).toString());
+          if(data.containsKey(userID)){
+            j++;
+          }
+        }
+        if(j>0){
+          favList.add(true);
+        }
+        else{
+          favList.add(false);
+        }
+
+        dataList.add(data);
+
+      });
+
+
+      print(value['carName']);
+      //list.add(user);
+    });
+  }
   void _activateListener() async {
     // final database = FirebaseDatabase.instance.ref();
 
@@ -160,7 +210,7 @@ class _Home_pageState extends State<Home_page> {
           // );
         }
         for (var k in d) {
-          print(k);
+          print("data:"+k.toString());
           print(Value[k]['imgUrl']);
           print((Value[k]['carName']).runtimeType);
 
@@ -347,7 +397,8 @@ class _Home_pageState extends State<Home_page> {
                   padding: EdgeInsets.only(top: 20),
                   child: GestureDetector(
                     onTap: () {
-                      Get.to(PaymentDetails());
+                      print("ehre");
+                      Get.to(() => PdfView());
                     },
                     child: Container(
                       width: 230,
@@ -356,6 +407,32 @@ class _Home_pageState extends State<Home_page> {
                         children: [
                           Text(
                             "Tax Payment detatils",
+                            style: TextStyle(
+                                color: myColor,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          Icon(
+                            FontAwesomeIcons.moneyCheckDollar,
+                            color: myColor,
+                          )
+                        ],
+                      ),
+                    ),
+                  )),
+              Padding(
+                  padding: EdgeInsets.only(top: 20),
+                  child: GestureDetector(
+                    onTap: () {
+                      Get.to(PaymentDetails());
+                    },
+                    child: Container(
+                      width: 230,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Payment detatils",
                             style: TextStyle(
                                 color: myColor,
                                 fontSize: 18,
@@ -447,10 +524,7 @@ class _Home_pageState extends State<Home_page> {
                 mainAxisSpacing: 20,
                 shrinkWrap: true,
                 children:
-                    List.generate(dataList.length, (index) => Padding(
-                      padding: EdgeInsets.only(bottom: 20),
-                      child: GridDesign(index),
-                    ))
+                    List.generate(dataList.length, (index) => GridDesign(index))
                         .toList(),
               )),
             ],
@@ -606,7 +680,7 @@ class _Home_pageState extends State<Home_page> {
             onPressed: () {
               print("asad");
               //print(dataList[index].Url[0]);
-              Get.to(DetailPage(dataList[index].Url[dataList[index].url.length-1], dataList[index].Price));
+              Get.to(DetailPage(dataList[index].Url[dataList[index].url.length-1], dataList[index].Price,dataList[index].url));
             },
             style: ElevatedButton.styleFrom(primary: myColor),
             child: Text("Details"),

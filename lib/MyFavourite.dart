@@ -55,6 +55,7 @@ class _MyFavouriteState extends State<MyFavourite> {
         });
 
         for (var k in d) {
+          print("data :"+k.toString());
           if (mounted) {
             showDialog(
                 barrierDismissible: false,
@@ -271,8 +272,10 @@ class _MyFavouriteState extends State<MyFavourite> {
           const SizedBox(height: 3),
           Expanded(
               child: ElevatedButton(
-            onPressed: () =>
-                Get.to(DetailPage(dataList[index].Url, dataList[index].Price)),
+            onPressed: (){
+               Get.to(DetailPage(dataList[index].Url, dataList[index].Price,dataList[index].Url));
+            },
+
             style: ElevatedButton.styleFrom(primary: myColor),
             child: const Text("Details"),
           ))

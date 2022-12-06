@@ -95,7 +95,9 @@ class AuthServices {
       UserCredential userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
       String usertype = "";
+      String id="";
       print("emal is: "+email);
+
       QuerySnapshot snap = await firestore.collection("person").get();
       for (int i = 0; i < snap.docs.length; i++) {
         var a = snap.docs[i];
@@ -103,15 +105,17 @@ class AuthServices {
         await firestore.collection("person").doc(a.id).get();
         if(email==snap1['email']){
           usertype = snap1['type'];
+          id=snap1['uid'];
         }
 
       }
       AuthServices().handleAuthState();
       print("login");
       if(usertype=="User"){
-        await SessionManager().set("email", email);
-        await SessionManager().set("Type", "User");
-
+        var sessionManager = SessionManager();
+        await sessionManager.set("email", email);
+        await sessionManager.set("Type", "User");
+        await sessionManager.set("Uid",id);
         Navigator.pushAndRemoveUntil<dynamic>(
           context,
           MaterialPageRoute<dynamic>(
@@ -124,6 +128,7 @@ class AuthServices {
       else if(usertype=="Admin"){
         await SessionManager().set("email", email);
         await SessionManager().set("Type", "Admin");
+        await SessionManager().set("Uid",id);
         Navigator.pushAndRemoveUntil<dynamic>(
           context,
           MaterialPageRoute<dynamic>(
@@ -136,6 +141,7 @@ class AuthServices {
         print("here aya1");
         await SessionManager().set("email", email);
         await SessionManager().set("Type", "Admin");
+        await SessionManager().set("Uid",id);
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (ctx) {
               return NavBar();

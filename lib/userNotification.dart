@@ -98,7 +98,7 @@ class _UserNotificationsState extends State<UserNotifications> {
             if (snapshot.data!.docs.isEmpty) {
               return Container(
                 alignment: Alignment.center,
-                child: Text('No Crops has been Registered'),
+                child: Text('No Query avaiable'),
               );
             }
             return ListView(

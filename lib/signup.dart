@@ -8,6 +8,8 @@ import 'package:mjcars/login.dart';
 import 'package:mjcars/mycolors.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'dart:async';
+
+import 'package:mjcars/verifiyScreen.dart';
 class signup extends StatefulWidget {
   signup({Key? key}) : super(key: key);
 
@@ -337,7 +339,7 @@ class _signupState extends State<signup> {
             // User? user= FirebaseAuth.instance.currentUser;
             // user?.sendEmailVerification();
             // FirebaseAuth.instance.currentUser?.reload();
-            AuthServices().storeNewUser(signedInUser.user, context);
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => VerifyScreen()));
           }).catchError((e) {
             if (e == 'Password should be at least 6 characters') {
               print("pass is weak");

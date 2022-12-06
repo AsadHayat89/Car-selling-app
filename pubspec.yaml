@@ -67,6 +67,7 @@ dependencies:
   rflutter_alert: ^2.0.4
   flutter_pdfview: ^1.2.5
   path_provider: ^2.0.11
+  carousel_slider: ^4.1.1
 
 dev_dependencies:
   flutter_test:

@@ -1,42 +1,34 @@
 {
   "project_info": {
-    "project_number": "1014435234532",
-    "firebase_url": "https://mjcar-fb763-default-rtdb.firebaseio.com",
-    "project_id": "mjcar-fb763",
-    "storage_bucket": "mjcar-fb763.appspot.com"
+    "project_number": "281691491904",
+    "firebase_url": "https://newcarproject-d4762-default-rtdb.firebaseio.com",
+    "project_id": "newcarproject-d4762",
+    "storage_bucket": "newcarproject-d4762.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1014435234532:android:ee64073c4eade4489c22f1",
+        "mobilesdk_app_id": "1:281691491904:android:fc20dff84bcbe4543599a5",
         "android_client_info": {
           "package_name": "com.example.mjcars"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1014435234532-h6t51d0hs2b6m1qqs27s7ls5qttk7e6f.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.mjcars",
-            "certificate_hash": "abffa3398fa0ceaf8d24627878aa5f29b86e4089"
-          }
-        },
-        {
-          "client_id": "1014435234532-a4m8rnnja7alk5imbl3sddogemhvn6fe.apps.googleusercontent.com",
+          "client_id": "281691491904-l8agfkii8ng0ad42oagm1d51olpqf77q.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDrBzHbp0EfoTQ6E-UJy-IOsxe83xlB0eQ"
+          "current_key": "AIzaSyCl5yB5hrAIEreCPASIvvpiA0UVr-88kxU"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1014435234532-a4m8rnnja7alk5imbl3sddogemhvn6fe.apps.googleusercontent.com",
+              "client_id": "281691491904-l8agfkii8ng0ad42oagm1d51olpqf77q.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

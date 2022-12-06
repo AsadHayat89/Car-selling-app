@@ -15,6 +15,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'Admin_Nav.dart';
+import 'forget_password.dart';
 import 'home.dart';
 
 class login_screen extends StatefulWidget {
@@ -292,12 +293,17 @@ class _login_screenState extends State<login_screen> {
                           height: 10,
                         ),
                         Center(
-                          child: Text(
-                            'Forgot password ?',
-                            style: TextStyle(
-                                color: myColor,
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold),
+                          child: GestureDetector(
+                            onTap: (){
+                              Get.to(ForgetPassword());
+                            },
+                            child: Text(
+                              'Forgot password ?',
+                              style: TextStyle(
+                                  color: myColor,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold),
+                            ),
                           ),
                         ),
                         SizedBox(height: 15),
