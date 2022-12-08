@@ -13,6 +13,7 @@ import 'MyFavourite.dart';
 
 import 'admin.dart';
 import 'adminNotifications.dart';
+import 'adminhome/AdminHome.dart';
 import 'constants/Constants.dart';
 import 'home.dart';
 
@@ -71,8 +72,8 @@ class _NavigationBarState extends State<NavBar> {
   int ind=0;
   final screens=
   [
-    
-    Home_page(),
+
+    AdminHome(),
     Admin(),
     const MyFavourite(),
     AdminNotifications(),

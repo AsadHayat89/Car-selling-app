@@ -8,6 +8,9 @@ import 'package:mjcars/firebase/userNav.dart';
 import 'package:mjcars/home.dart';
 import 'package:mjcars/login.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../model/User.dart';
 
 class AuthServices {
   static var auth = FirebaseAuth.instance.currentUser;
@@ -129,6 +132,14 @@ class AuthServices {
         await SessionManager().set("email", email);
         await SessionManager().set("Type", "Admin");
         await SessionManager().set("Uid",id);
+// Obtain shared preferences.
+        final prefs = await SharedPreferences.getInstance();
+
+// Save an integer value to 'counter' key.
+        await prefs.setString('Type', "Admin");
+
+        Userdata user = Userdata(ID:id,email:email,type:"Admin");
+        await SessionManager().set('user', user);
         Navigator.pushAndRemoveUntil<dynamic>(
           context,
           MaterialPageRoute<dynamic>(

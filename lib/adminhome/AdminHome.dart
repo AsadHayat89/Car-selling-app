@@ -25,20 +25,22 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-import 'Controller/adminController.dart';
-import 'constants/Constants.dart';
-import 'data.dart';
-import 'firebase/userNav.dart';
-import 'login.dart';
-import 'model/User.dart';
+import '../Controller/adminController.dart';
+import '../constants/Constants.dart';
+import '../data.dart';
+import '../firebase/userNav.dart';
+import '../login.dart';
+import 'homeDetailPAge.dart';
+
+
 // ignore_for_file: prefer_const_constructors
 
-class Home_page extends StatefulWidget {
+class AdminHome extends StatefulWidget {
   @override
-  State<Home_page> createState() => _Home_pageState();
+  State<AdminHome> createState() => _Home_pageState();
 }
 
-class _Home_pageState extends State<Home_page> {
+class _Home_pageState extends State<AdminHome> {
   //late StreamSubscription _dailySpecialStream;
   var Controllervale = Get.put(AdminController());
   FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -141,7 +143,7 @@ class _Home_pageState extends State<Home_page> {
         print("came here");
       });
     }
-  //  _activateListener();
+    //  _activateListener();
   }
 
   // void addShow() async{
@@ -168,10 +170,10 @@ class _Home_pageState extends State<Home_page> {
           value["imgUrl"],
           key,
           value["address"],
-        value["body_color"],
-        value["description"],
-        value["mil"],
-        value["model"],
+          value["body_color"],
+          value["description"],
+          value["mil"],
+          value["model"],
         );
         i++;
         print("KEy value: "+key);
@@ -469,8 +471,8 @@ class _Home_pageState extends State<Home_page> {
               print("print signout");
               Navigator.pushReplacement(context,
                   MaterialPageRoute(builder: (ctx) {
-                return login_screen();
-              }));
+                    return login_screen();
+                  }));
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -533,14 +535,14 @@ class _Home_pageState extends State<Home_page> {
               ),
               Expanded(
                   child: GridView.count(
-                crossAxisCount: 2,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 20,
-                shrinkWrap: true,
-                children:
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 20,
+                    shrinkWrap: true,
+                    children:
                     List.generate(dataList.length, (index) => GridDesign(index))
                         .toList(),
-              )),
+                  )),
             ],
           )
         ],
@@ -568,14 +570,14 @@ class _Home_pageState extends State<Home_page> {
               ),
               Expanded(
                   child: GridView.count(
-                crossAxisCount: 2,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 20,
-                shrinkWrap: true,
-                children:
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 20,
+                    shrinkWrap: true,
+                    children:
                     List.generate(dataList.length, (index) => GridDesign(index))
                         .toList(),
-              )),
+                  )),
             ],
           )
         ],
@@ -598,7 +600,7 @@ class _Home_pageState extends State<Home_page> {
                 width: 45.w,
                 margin: EdgeInsets.only(left: 12, top: 12, right: 16),
                 decoration: BoxDecoration(
-                    // border: Border.all(color: Colors.grey,style: BorderStyle.solid,width: 2),
+                  // border: Border.all(color: Colors.grey,style: BorderStyle.solid,width: 2),
                     borderRadius: BorderRadius.circular(5),
                     image: DecorationImage(
                         image: NetworkImage(dataList[index]
@@ -615,67 +617,67 @@ class _Home_pageState extends State<Home_page> {
                   child: Neumorphic(
                       padding: EdgeInsets.zero,
                       style: NeumorphicStyle(
-                          //shape: NeumorphicShape.concave,
+                        //shape: NeumorphicShape.concave,
                           boxShape: NeumorphicBoxShape.roundRect(
                               BorderRadius.circular(50)),
                           color: Colors.white),
                       child: favList[index]
                           ? IconButton(
-                              padding: EdgeInsets.zero,
-                              onPressed: () {
-                                if (auth1 != null) {
-                                  print(auth1);
-                                  print("it's not null");
-                                  DatabaseReference favRef = FirebaseDatabase
-                                      .instance
-                                      .ref()
-                                      .child("user")
-                                      .child(
-                                          dataList[index].uploadId.toString())
-                                      .child("fav")
-                                      .child(auth1!.uid)
-                                      .child("state");
-                                  favRef.set(false);
-                                  setState(() {
-                                    favFun(index,
-                                        dataList[index].uploadId.toString());
-                                  });
-                                }
+                        padding: EdgeInsets.zero,
+                        onPressed: () {
+                          if (auth1 != null) {
+                            print(auth1);
+                            print("it's not null");
+                            DatabaseReference favRef = FirebaseDatabase
+                                .instance
+                                .ref()
+                                .child("user")
+                                .child(
+                                dataList[index].uploadId.toString())
+                                .child("fav")
+                                .child(auth1!.uid)
+                                .child("state");
+                            favRef.set(false);
+                            setState(() {
+                              favFun(index,
+                                  dataList[index].uploadId.toString());
+                            });
+                          }
 
-                                print("object");
-                              },
-                              icon: Icon(
-                                Icons.favorite,
-                                color: Colors.red,
-                              ),
-                            )
+                          print("object");
+                        },
+                        icon: Icon(
+                          Icons.favorite,
+                          color: Colors.red,
+                        ),
+                      )
                           : IconButton(
-                              padding: EdgeInsets.zero,
-                              onPressed: () {
-                                if (auth1 != null) {
-                                  print("it's not null1");
-                                  print(auth1);
-                                  DatabaseReference favRef = FirebaseDatabase
-                                      .instance
-                                      .ref()
-                                      .child("user")
-                                      .child(
-                                          dataList[index].uploadId.toString())
-                                      .child("fav")
-                                      .child(auth1!.uid)
-                                      .child("state");
-                                  favRef.set(true);
-                                  setState(() {
-                                    favFun(index,
-                                        dataList[index].uploadId.toString());
-                                  });
-                                }
+                          padding: EdgeInsets.zero,
+                          onPressed: () {
+                            if (auth1 != null) {
+                              print("it's not null1");
+                              print(auth1);
+                              DatabaseReference favRef = FirebaseDatabase
+                                  .instance
+                                  .ref()
+                                  .child("user")
+                                  .child(
+                                  dataList[index].uploadId.toString())
+                                  .child("fav")
+                                  .child(auth1!.uid)
+                                  .child("state");
+                              favRef.set(true);
+                              setState(() {
+                                favFun(index,
+                                    dataList[index].uploadId.toString());
+                              });
+                            }
 
-                                print("object");
-                              },
-                              icon: Icon(
-                                Icons.favorite,
-                              ))),
+                            print("object");
+                          },
+                          icon: Icon(
+                            Icons.favorite,
+                          ))),
                 ),
               ),
             ],
@@ -691,14 +693,14 @@ class _Home_pageState extends State<Home_page> {
           SizedBox(height: 0.2),
           Expanded(
               child: ElevatedButton(
-            onPressed: () {
-              print("asad");
-              //print(dataList[index].Url[0]);
-              Get.to(DetailPage(dataList[index].Url[dataList[index].url.length-1], dataList[index].Price,dataList[index].url,dataList[index]));
-            },
-            style: ElevatedButton.styleFrom(primary: myColor),
-            child: Text("Details"),
-          ))
+                onPressed: () {
+                  print("asad");
+                  //print(dataList[index].Url[0]);
+                  Get.to(AdminDetailPage(dataList[index].Url[dataList[index].url.length-1], dataList[index].Price,dataList[index].url,dataList[index]));
+                },
+                style: ElevatedButton.styleFrom(primary: myColor),
+                child: Text("Details"),
+              ))
         ],
       ),
     );
@@ -786,7 +788,7 @@ checkConnectivity(BuildContext context) async {
     case ConnectivityResult.wifi:
 
     case ConnectivityResult.mobile:
-      // print("mobile");
+    // print("mobile");
       try {
         final result = await InternetAddress.lookup('google.com');
         if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {

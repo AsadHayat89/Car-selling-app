@@ -1,4 +1,6 @@
 // ignore_for_file: prefer_const_constructors
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:path/path.dart' as Path;
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -21,8 +23,14 @@ class _AdminState extends State<Admin> {
   var formKey = GlobalKey<FormState>();
   final picker = ImagePicker();
   List<PickedFile> ImagesUrl = [];
+  String SelectedCarName="";
+  bool carMakerror=false;
+  String Initialvalue="";
+  String carType="";
   List<String> UrlPaths = [];
   List<File> _images = [];
+  List<String> Cars=["Honda", "Suzuki", "Toyota", "Dihatsu"];
+  final String carMake = "CarMake";
   double val = 0;
 
   //late String carName,price,carModel;
@@ -53,12 +61,63 @@ class _AdminState extends State<Admin> {
               Center(
                 child: InkWell(
                   onTap: () async {
+                    showModalBottomSheet(
+                        context: context,
+                        builder: (builder) {
+                          return new Container(
+                            height: 100.0,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(20.0),
+                                topLeft: Radius.circular(20.0),
+                              ), //could change this to Color(0xFF737373),
+                              //so you don't have to change MaterialApp canvasColor
+                            ),
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(top: 10, bottom: 10),
+                                  child: GestureDetector(
+                                    onTap: (){
+                                      openCamera("camera");
+                                    },
+                                      child: Text(
+                                    "Camera",
+                                    style: TextStyle(
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.bold),
+                                  )),
+                                ),
+                                Center(
+                                    child: Container(
+                                  width: 300,
+                                  height: 1,
+                                  color: Colors.black,
+                                )),
+                                GestureDetector(
+                                  onTap: (){
+                                    openCamera("gallery");
+                                  },
+                                  child: Padding(
+                                    padding: EdgeInsets.only(top: 10),
+                                    child: Text(
+                                      "Gallery",
+                                      style: TextStyle(
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        });
                     // File img = await CommonMethodst.getCameraImage();
                     // StorageFirebaseServices.uploadImage(img, "wfrgh");
-                    setState(() {
-                      openCamera();
-                      //upload();
-                    });
+                    // setState(() {
+                    //   openCamera();
+                    //   //upload();
+                    // });
                   },
                   child: SizedBox(
                       height: 138,
@@ -101,7 +160,57 @@ class _AdminState extends State<Admin> {
                                 ),
                                 GestureDetector(
                                   onTap: () {
-                                    openCamera();
+                                    showModalBottomSheet(
+                                        context: context,
+                                        builder: (builder) {
+                                          return new Container(
+                                            height: 100.0,
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(20.0),
+                                                topLeft: Radius.circular(20.0),
+                                              ), //could change this to Color(0xFF737373),
+                                              //so you don't have to change MaterialApp canvasColor
+                                            ),
+                                            child: Column(
+                                              children: [
+                                                Padding(
+                                                  padding: EdgeInsets.only(top: 10, bottom: 10),
+                                                  child: GestureDetector(
+                                                      onTap: (){
+                                                        openCamera("camera");
+                                                      },
+                                                      child: Text(
+                                                        "Camera",
+                                                        style: TextStyle(
+                                                            fontSize: 24,
+                                                            fontWeight: FontWeight.bold),
+                                                      )),
+                                                ),
+                                                Center(
+                                                    child: Container(
+                                                      width: 300,
+                                                      height: 1,
+                                                      color: Colors.black,
+                                                    )),
+                                                GestureDetector(
+                                                  onTap: (){
+                                                    openCamera("gallery");
+                                                  },
+                                                  child: Padding(
+                                                    padding: EdgeInsets.only(top: 10),
+                                                    child: Text(
+                                                      "Gallery",
+                                                      style: TextStyle(
+                                                          fontSize: 24,
+                                                          fontWeight: FontWeight.bold),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        });
                                   },
                                   child: Container(
                                     color: myColor,
@@ -137,11 +246,39 @@ class _AdminState extends State<Admin> {
                 padding: const EdgeInsets.all(35.0),
                 child: Column(
                   children: [
-                    l("body", "Car Name", carName),
+
+                    DropdownButtonHideUnderline(
+                      child: FormBuilderDropdown(
+                        validator: FormBuilderValidators.required(),
+                        name: carMake,
+                        decoration: InputDecoration(
+                            // errorText: this.carMakerror?"Field can't be Empty":null,
+                            // labelStyle: this.carMakerror?TextStyle(color:Colors.red):TextStyle(color:Colors.black54),
+                            labelText: ("Car Make")
+                        ),
+                        isExpanded: true,
+
+                        onChanged: (val){
+                          setState(() {
+                            SelectedCarName="";
+                            carType=val.toString();
+                            carMakerror=false;
+                            Initialvalue="";
+                          });
+                        },
+                        items:
+                        Cars.map((option) {
+                          return DropdownMenuItem(
+                            value: option,
+                            child: Text(option),
+                          );
+                        }).toList(),
+                      ),
+                    ),
                     SizedBox(
                       height: 25,
                     ),
-                    l("body", "Car model", carModel),
+                    l("body", "Car Name", carName),
                     SizedBox(
                       height: 25,
                     ),
@@ -200,45 +337,55 @@ class _AdminState extends State<Admin> {
 
   final FirebaseStorage _storage = FirebaseStorage.instance;
 
-  Future<void> openCamera() async {
-    final pickedFile = await picker.getImage(source: ImageSource.camera);
+  Future<void> openCamera(String data) async {
+    final pickedFile;
+    if(data=="gallery"){
+      pickedFile = await picker.getImage(source: ImageSource.gallery);
+    }
+    else{
+      pickedFile = await picker.getImage(source: ImageSource.camera);
+    }
+
     File selected = File(pickedFile!.path);
 
     setState(() {
+      print("selected files: "+selected.path.toString());
       _images.add(selected);
       ImagesUrl.add(pickedFile);
+      print("selected files: "+pickedFile.path.toString());
       print(ImagesUrl.length.toString());
     });
   }
 
   Future uploadFile() async {
-    int i = 1;
+    //int j = 1;
 
     try {
-        showAlertDialog(context);
-        print("here 1");
-        FirebaseStorage storage = FirebaseStorage.instance;
-        Reference ref = storage.ref().child("TesFolder/${DateTime.now()}");
-        for (int i = 0; i < ImagesUrl.length; i++) {
-          await ref.putFile(File(ImagesUrl[0]!.path));
-          var imageUrl = await ref.getDownloadURL();
-          print("data here: " + imageUrl);
-          //url = imageUrl.toString();
-          setState(() {
-            print("data found here 1");
-            UrlPaths.add(imageUrl);
-          });
-        }
+      showAlertDialog(context);
+      print("here 1");
+      FirebaseStorage storage = FirebaseStorage.instance;
+      Reference ref = storage.ref().child("TesFolder/${DateTime.now()}");
+      for (int i = 0; i < ImagesUrl.length; i++) {
+        print("data here: "+ImagesUrl[i].path.toString());
+        await ref.putFile(File(ImagesUrl[i]!.path));
+        var imageUrl = await ref.getDownloadURL();
+        print("data here: " + imageUrl);
+        //url = imageUrl.toString();
+        setState(() {
+          print("data found here 1");
+          UrlPaths.add(imageUrl);
 
-      } on Exception {}
+        });
+      }
+    } on Exception {}
 
     setState(() {
-      print("paths here: "+UrlPaths[0].toString());
+      print("paths here: " + UrlPaths[0].toString());
       DatabaseReference refi = FirebaseDatabase.instance.ref("user");
       refi.push().set({
         'mil': carMileage.text,
         'carName': carName.text,
-        'model': carModel.text,
+        'model': carType,
         'RegisteredIn': register.text,
         'price': price.text,
         'imgUrl': UrlPaths,
@@ -256,9 +403,8 @@ class _AdminState extends State<Admin> {
       _image = null;
     });
 
-    Navigator.of(context, rootNavigator: false).push(MaterialPageRoute(
-        builder: (context) => NavBar()));
-
+    Navigator.of(context, rootNavigator: false)
+        .push(MaterialPageRoute(builder: (context) => NavBar()));
   }
 
   Future<void> upload() async {
@@ -315,7 +461,6 @@ class _AdminState extends State<Admin> {
       //map["carName"]=carName;
 
       // databaseReference.child(uploadId!).set(map);
-
     }
   }
 

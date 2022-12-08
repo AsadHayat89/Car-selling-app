@@ -12,6 +12,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'Controller/adminController.dart';
 import 'QueryDetails.dart';
+import 'agreementPdf.dart';
 import 'model/query.dart';
 import 'mycolors.dart';
 
@@ -24,6 +25,7 @@ class UserNotifications extends StatefulWidget {
 
 class _UserNotificationsState extends State<UserNotifications> {
   Map<String, dynamic>? paymentIntent;
+  bool? valuefirst = false;
   var Controllervale=Get.put(AdminController());
   FirebaseAuth _auth=FirebaseAuth.instance;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -236,46 +238,77 @@ class _UserNotificationsState extends State<UserNotifications> {
                                     padding:EdgeInsets.only(bottom: 10),
                                     child: Padding(
                                       padding: EdgeInsets.only(top: 10,bottom: 5),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                      child: Column(
                                         children: [
                                           Padding(
-                                            padding: EdgeInsets.only(right: 10),
-                                            child: GestureDetector(
-                                              onTap: (){
-                                                print("Print Id for data :"+document.id);
-                                                deleteData(document.id);
-                                              },
-                                              child: Container(
-                                                width: 100,
-                                                height: 40,
-                                                decoration: new BoxDecoration(
+                                            padding: EdgeInsets.only(left:20,bottom: 20),
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              children: [
+                                                Checkbox(
+                                                  checkColor: Colors.greenAccent,
+                                                  activeColor: myColor,
 
-                                                    border: Border.all(color: myColor),
-                                                  borderRadius: new BorderRadius.all(Radius.circular(20)),
+                                                  value: this.valuefirst,
+                                                  onChanged: (bool? value) {
+                                                    setState(() {
+                                                      this.valuefirst = value;
+                                                    });
+                                                  },
                                                 ),
-                                                child: Center(child: Text("Decline",style: TextStyle(color: myColor,fontSize: 18),)),
-                                              ),
+                                                GestureDetector(onTap: (){Get.to(agreementPDF());},
+                                                    child: Text("Click here to see",style: TextStyle(color: myColor),)),
+                                                GestureDetector(onTap: (){Get.to(agreementPDF());},
+                                                    child: Text(" Agrement",style: TextStyle(color: Colors.blue,fontWeight: FontWeight.bold),))
+                                              ],
                                             ),
                                           ),
-                                          GestureDetector(
-                                            onTap: (){
-                                              int price=int.parse(document['replyPrice']);
-                                              int percent=((price/100)*20).toInt();
-                                              int totalPrice=price-percent;
-                                              makePayment(percent.toString(),document.id);
-                                            },
-                                            child: Container(
-                                              width: 100,
-                                              height: 40,
-                                              decoration: new BoxDecoration(
-                                                color: myColor,
-                                                border: Border.all(color: myColor),
-                                                borderRadius: new BorderRadius.all(Radius.circular(20)),
+                                          if(valuefirst==true)
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              Padding(
+                                                padding: EdgeInsets.only(right: 10),
+                                                child: GestureDetector(
+                                                  onTap: (){
+                                                    print("Print Id for data :"+document.id);
+                                                    deleteData(document.id);
+                                                  },
+                                                  child: Container(
+                                                    width: 100,
+                                                    height: 40,
+                                                    decoration: new BoxDecoration(
+
+                                                        border: Border.all(color: myColor),
+                                                      borderRadius: new BorderRadius.all(Radius.circular(20)),
+                                                    ),
+                                                    child: Center(child: Text("Decline",style: TextStyle(color: myColor,fontSize: 18),)),
+                                                  ),
+                                                ),
                                               ),
-                                              child: Center(child: Text("Accept",style: TextStyle(color: Colors.white,fontSize: 18),)),
-                                            ),
+                                              GestureDetector(
+                                                onTap: (){
+                                                  if(valuefirst==true){
+                                                    int price=int.parse(document['replyPrice']);
+                                                    int percent=((price/100)*20).toInt();
+                                                    int totalPrice=price-percent;
+                                                    makePayment(percent.toString(),document.id);
+                                                  }
+
+                                                },
+                                                child: Container(
+                                                  width: 100,
+                                                  height: 40,
+                                                  decoration: new BoxDecoration(
+                                                    color: myColor,
+                                                    border: Border.all(color: myColor),
+                                                    borderRadius: new BorderRadius.all(Radius.circular(20)),
+                                                  ),
+                                                  child: Center(child: Text("Accept",style: TextStyle(color: Colors.white,fontSize: 18),)),
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       ),

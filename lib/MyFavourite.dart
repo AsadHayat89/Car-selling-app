@@ -88,6 +88,11 @@ class _MyFavouriteState extends State<MyFavourite> {
             Value[k]['price'],
             Value[k]["imgUrl"],
             k,
+            Value[k]["address"],
+            Value[k]["body_color"],
+            Value[k]["description"],
+            Value[k]["mil"],
+            Value[k]["model"],
           );
 
           if (auth1 != null) {
@@ -273,7 +278,7 @@ class _MyFavouriteState extends State<MyFavourite> {
           Expanded(
               child: ElevatedButton(
             onPressed: (){
-               Get.to(DetailPage(dataList[index].Url, dataList[index].Price,dataList[index].Url));
+               Get.to(DetailPage(dataList[index].Url, dataList[index].Price,dataList[index].Url,dataList[index]));
             },
 
             style: ElevatedButton.styleFrom(primary: myColor),

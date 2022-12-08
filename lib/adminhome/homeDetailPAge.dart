@@ -1,15 +1,19 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:mjcars/mycolors.dart';
 
-import 'data.dart';
+import '../Admin_Nav.dart';
+import '../data.dart';
 
-class DetailPage extends StatefulWidget {
+
+class AdminDetailPage extends StatefulWidget {
   var pic, des;
   List<Object?> dataList = [];
   Data? u;
 
-  DetailPage(var pic, var des, List<Object?> data, Data u1) {
+  AdminDetailPage(var pic, var des, List<Object?> data, Data u1) {
     this.pic = pic;
     this.des = des;
     this.dataList = data;
@@ -18,15 +22,14 @@ class DetailPage extends StatefulWidget {
   }
 
   @override
-  State<DetailPage> createState() => _DetailPageState();
+  State<AdminDetailPage> createState() => _DetailPageState();
 }
 
-class _DetailPageState extends State<DetailPage> {
+class _DetailPageState extends State<AdminDetailPage> {
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    print(widget.dataList.length.toString());
     print("data size: " + widget.dataList.length.toString());
     for (int i = 0; i < widget.dataList.length; i++) {
       print(widget.dataList[i]);
@@ -69,9 +72,9 @@ class _DetailPageState extends State<DetailPage> {
         child: ElevatedButton(
           onPressed: () => {},
           style:
-              ButtonStyle(backgroundColor: MaterialStateProperty.all(myColor)),
+          ButtonStyle(backgroundColor: MaterialStateProperty.all(myColor)),
           child:
-              const Text("Contact us", style: TextStyle(color: Colors.white)),
+          const Text("Contact us", style: TextStyle(color: Colors.white)),
         ));
     final bottomContent = Container(
       // height: MediaQuery.of(context).size.height,
@@ -156,7 +159,36 @@ class _DetailPageState extends State<DetailPage> {
               ],
             ),
           ),
-         ],
+          Padding(
+            padding: EdgeInsets.only(top: 20,bottom: 10),
+            child: Center(
+              child: GestureDetector(
+                onTap: (){
+                  print(widget.u!.uploadId.toString());
+                  FirebaseDatabase.instance.reference()
+                      .child('user')
+                      .child(widget.u!.uploadId.toString())
+                      .remove();
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => NavBar()));
+
+
+                },
+                child: Container(
+                  width: 200,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: myColor,
+                      border: Border.all(
+                        color: myColor,
+                      ),
+                      borderRadius: BorderRadius.all(Radius.circular(20))
+                  ),
+                  child: Center(child: Text("Delete",style: TextStyle(fontSize: 24,color: Colors.white),)),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
 
@@ -181,18 +213,17 @@ class _DetailPageState extends State<DetailPage> {
               itemCount: widget.dataList.length,
               itemBuilder:
                   (BuildContext context, int itemIndex, int pageViewIndex) =>
-
-                      Container(
-                child: Container(
-                    padding: const EdgeInsets.only(left: 10.0),
-                    height: MediaQuery.of(context).size.height * 0.5,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: NetworkImage("${widget.dataList[itemIndex]}"),
-                        fit: BoxFit.fitWidth,
-                      ),
-                    )),
-              ),
+                  Container(
+                    child: Container(
+                        padding: const EdgeInsets.only(left: 10.0),
+                        height: MediaQuery.of(context).size.height * 0.5,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: NetworkImage("${widget.dataList[itemIndex]}"),
+                            fit: BoxFit.fitWidth,
+                          ),
+                        )),
+                  ),
             ),
             bottomContent
           ],

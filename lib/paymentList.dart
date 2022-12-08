@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+import 'Certificate.dart';
 class PaymentDetails extends StatefulWidget {
   const PaymentDetails({Key? key}) : super(key: key);
 
@@ -47,10 +49,9 @@ class _PaymentDetailsState extends State<PaymentDetails> {
                     padding: EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
                     child: GestureDetector(
                       onTap: (){
-                        //print("Document id: "+document.id);
-                        // if(document['replyStatus']=="1"){
-                        //   Navigator.of(context).push(MaterialPageRoute(builder: (context) => UserQueryDetail(DetailId:document.id,)));
-                        // }
+                        if(document['status']!="0"){
+                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => Certificate(useremail:document['User'].toString(),pay:document['Ammount'].toString() ,)));
+                        }
 
                       },
                       child: Container(

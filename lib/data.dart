@@ -6,13 +6,12 @@ class Data
   List<Object?> url;
   String?price;
   String?uploadId;
-
-
-
-  
-  
-
-   Data( this.carName , this. price, this.url,this.uploadId );
+  String? address;
+  String? body_color;
+  String? description;
+String? mil;
+String? model;
+  Data( this.carName , this. price, this.url,this.uploadId,this.address,this.body_color,this.description,this.mil,this.model);
     
     
   //   // this.carModel;
